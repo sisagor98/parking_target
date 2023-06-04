@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
-using UnityEngine.Serialization;
+
 using PathCreation;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private Vector3 movementDirection;
 
     public bool shallMove = false;
+    public bool shallMoveRev = false;
     public bool isSelectedPlayer = false;
     public bool shallPlay = false;
 
@@ -31,16 +32,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed;
     float distanceTravelled;
     Quaternion PlayerBodyRot;
+    public Image progressBarImage;
 
-
-
-
-
-    void Awake()
-    {
-      //  rigidBody = GetComponent<Rigidbody>();
-        
-    }
     private void Start()
     {
         Application.targetFrameRate = 60;
@@ -50,23 +43,11 @@ public class Player : MonoBehaviour
         if (shallMove)
         {
             PlayerMove();
-           // PlayerMoveWay();
-           // MoveArrow();
         }
+       
     }
 
-    private void MoveArrow()
-    {
-        if (movementDirection != null)
-        {
-            rigidBody.velocity = movementDirection * movementSpeed;
-            //if(rigidBody.velocity.magnitude < 5f )
-            //{
-            //    rigidBody.velocity = movementDirection * movementSpeed;
-            //   // print(rigidBody.velocity);
-            //}
-        }
-    }
+
 
     public void SetMovementandDirection(bool moveArrow)
     {
@@ -74,49 +55,18 @@ public class Player : MonoBehaviour
     }
     
 
-    public void PlayerMoveWay()
-    {
-        
-        Vector3 waypointPosition = waypoints[currentWaypointIndex].position;
-
-       
-        Vector3 direction = waypointPosition - transform.position;
-        transform.position += direction * speed * Time.deltaTime;
-
-     
-        if (Vector3.Dot(direction, direction) < 0.01f)
-        {
-            
-            currentWaypointIndex++;
-
-            if (currentWaypointIndex >= waypoints.Length)
-            {
-                currentWaypointIndex = 0;
-            }
-        }
-    }
-
     public void PlayerMove()
     {
-        distanceTravelled += speed * Time.deltaTime;
+         distanceTravelled += speed * Time.deltaTime;
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
         Quaternion rot = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
         PlayerBodyRot.eulerAngles = new Vector3(rot.eulerAngles.x, rot.eulerAngles.y, 0);
         transform.SetPositionAndRotation(transform.position, PlayerBodyRot);
 
+        UpdateProgressBar();
+
     }
-
-    public void StopPhysicsBasedMovement()
-    {
-        rigidBody.isKinematic = true;
-        shallMove = false;
-        rigidBody.velocity = Vector3.zero;
-        rigidBody.angularVelocity = Vector3.zero;
-        isSelectedPlayer = false;
-    }
-
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -128,5 +78,9 @@ public class Player : MonoBehaviour
         }
     }
 
-
+    private void UpdateProgressBar()
+    {
+        //float progress = 1f- ( distanceTravelled / pathCreator.path.length);
+        //progressBarImage.fillAmount = progress;
+    }
 }
