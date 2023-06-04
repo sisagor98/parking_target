@@ -118,5 +118,14 @@ public class Player : MonoBehaviour
 
 
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            shallMove = false;
+            print("GameOver");
+        }
+    }
+
 
 }

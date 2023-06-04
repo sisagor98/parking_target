@@ -65,7 +65,7 @@ public class GameInputManager : MonoBehaviour
                     bool shouldPlay = selectedPlayerInstance.shallPlay;
                     selectedPlayerInstance.shallPlay = !shouldPlay;
 
-                    print("Tap detected");
+                   // print("Tap detected");
                 }
 
 

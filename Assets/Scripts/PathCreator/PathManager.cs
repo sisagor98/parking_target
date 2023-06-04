@@ -20,12 +20,12 @@ public class PathManager : MonoBehaviour
     public void ConstructLine()
     {
 
-        pathCreator.transform.localPosition = transform.position;
+        pathCreator.transform.localPosition = transform.localPosition;
         foreach (VisualRoadMesh roadmesh in visualRoadMeshes)
         {
             foreach (Transform pathPoint in roadmesh.pathPoints)
             {
-                pathPosList.Add(pathPoint.position);
+                pathPosList.Add(pathPoint.localPosition);
             }
         }
 
