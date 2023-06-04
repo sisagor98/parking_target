@@ -123,6 +123,7 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             shallMove = false;
+            GameOverPanelControl.Instance.EnablePanel(GameState.LevelFailed, 1f);
             print("GameOver");
         }
     }
