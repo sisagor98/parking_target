@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Serialization;
+using PathCreation;
 
 public class Player : MonoBehaviour
 {
@@ -20,8 +21,18 @@ public class Player : MonoBehaviour
 
 
     public Transform[] waypoints;
-    public float speed;
+   // public float speed;
     private int currentWaypointIndex = 0;
+
+
+    [Header("PathCreator") ]
+    [SerializeField] private PathCreator pathCreator;
+    [SerializeField] private EndOfPathInstruction endOfPathInstruction;
+    [SerializeField] private float speed;
+    float distanceTravelled;
+    Quaternion PlayerBodyRot;
+
+
 
 
 
@@ -38,7 +49,8 @@ public class Player : MonoBehaviour
     {
         if (shallMove)
         {
-            PlayerMoveWay();
+            PlayerMove();
+           // PlayerMoveWay();
            // MoveArrow();
         }
     }
@@ -83,39 +95,17 @@ public class Player : MonoBehaviour
             }
         }
     }
-   
 
+    public void PlayerMove()
+    {
+        distanceTravelled += speed * Time.deltaTime;
+        transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
+        transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+        Quaternion rot = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+        PlayerBodyRot.eulerAngles = new Vector3(rot.eulerAngles.x, rot.eulerAngles.y, 0);
+        transform.SetPositionAndRotation(transform.position, PlayerBodyRot);
 
-
-    //public void OnCollisionFeedback()
-    //{
-    //    if (isSelectedArrow)
-    //    {
-    //        rigidBody.isKinematic = true;
-    //        shallMove = false;
-    //        isSelectedArrow = false;
-    //        GameInputManager.Instance.selectedArrow = null;
-    //        Vector3 hitPosition = transform.position;
-    //        rigidBody.velocity = Vector3.zero;
-    //        rigidBody.angularVelocity = Vector3.zero;
-    //        Vector3 newPos = hitPosition - (movementDirection * 0.6f);
-     
-        
-    //        transform.DOMove(newPos,0.2f).OnComplete(() =>
-    //            {
-    //                //To Add more collision effeft;
-    //            }
-    //        );
-    //    }
-    //    else
-    //    {
-            
-    //        // var rotation = transform.InverseTransformDirection(movementDirection);
-    //        // (rotation.x, rotation.z) = (-rotation.z, rotation.x);
-    //        // transform.DOPunchRotation(rotation * 7f, 0.3f, 8).SetId(transform);
-    //        transform.DOShakePosition(0.25f,0.2f,2);
-    //    }
-    //}
+    }
 
     public void StopPhysicsBasedMovement()
     {
