@@ -5,15 +5,24 @@ using UnityEngine;
 public class TargetPositon : MonoBehaviour
 {
     public bool isTarget;
+    public int targetId;
 
     private void OnTriggerEnter(Collider other)
     {
+        
+
         if (other.CompareTag("Player"))
         {
-            //GameManager.Instance.AddPlayer(1);
-            other.gameObject.GetComponent<Player>().shallMove = false;
+            other.gameObject.TryGetComponent<Player>(out Player player);
+            if(player!= null && player.id == targetId)
+            {
+                player.shallMove = false;
 
-            if(isTarget) GameManager.Instance.AddPlayer(1);
+                if (isTarget) GameManager.Instance.AddPlayer(1);
+            }
+
+            //GameManager.Instance.AddPlayer(1);
+           
 
 
         }
@@ -23,7 +32,12 @@ public class TargetPositon : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (isTarget) GameManager.Instance.RemovePlayer(1);
+            other.gameObject.TryGetComponent<Player>(out Player player);
+            if (player != null && player.id == targetId)
+            {
+                if (isTarget) GameManager.Instance.RemovePlayer(1);
+            }
+                
             
         }
     }

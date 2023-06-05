@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
 
+    public int id;
     public Rigidbody rigidBody;
     [SerializeField] private float movementSpeed = 0;
     private Vector3 movementDirection;
